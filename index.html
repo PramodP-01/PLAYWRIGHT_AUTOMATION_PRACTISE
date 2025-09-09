@@ -1,0 +1,27 @@
+<!-- flaky-button.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flaky Button</title>
+  <script>
+    let clickAttempts = 0;
+
+    function flakyClick() {
+      clickAttempts++;
+      const status = document.getElementById("status");
+
+      // Simulate flakiness: only succeed after 2+ attempts
+      if (clickAttempts >= 2) {
+        status.textContent = "✅ Button clicked successfully!";
+      } else {
+        status.textContent = "❌ Failed to register click. Try again.";
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Flaky Button Test</h1>
+  <button id="flakyButton" onclick="flakyClick()">Click Me</button>
+  <p id="status"></p>
+</body>
+</html>

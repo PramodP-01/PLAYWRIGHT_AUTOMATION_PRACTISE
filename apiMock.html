@@ -1,0 +1,35 @@
+<!-- mock-test.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Test</title>
+  <script>
+    async function fetchUser() {
+      try {
+        // These are free public APIs that don't require keys
+        const apis = [
+          'https://jsonplaceholder.typicode.com/users',
+          'https://httpbin.org/json', 
+          'https://reqres.in/api/users?page=2'  // Try different page
+        ];
+        
+        const res = await fetch(apis[0]);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        document.getElementById('output').textContent = JSON.stringify(data.slice(0, 3), null, 2);
+      } catch (error) {
+        document.getElementById('output').textContent = `Error: ${error.message}`;
+      }
+    }
+</script>
+</head>
+<body>
+  <h1>Fetch Users</h1>
+  <button onclick="fetchUser()">Get Users</button>
+  <pre id="output"></pre>
+</body>
+</html>

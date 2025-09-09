@@ -1,4 +1,5 @@
 import { test, expect, chromium, Page } from '@playwright/test';
+import { resolve } from 'path';
 
 
 test.describe('QA Automation Assignment', () => {
@@ -171,6 +172,61 @@ test('handling iframes',async({page})=>{
     await page.waitForTimeout(10000);
     await page.close();
 })
+
+test('File download test',async({page})=>{
+    await page.goto('https://the-internet.herokuapp.com/download');
+
+    // handle download event
+    const [download]=await Promise.all([
+        page.waitForEvent('download'),
+        page.click("//div[@class='example']/a[2]")
+    ])
+
+    // set the path of downloaded file
+
+    const setPath= await download.suggestedFilename("capture.png");
+    await download.saveAs(setPath);
+    await page.waitForTimeout(10000);
+    await page.close();
+
+    
+  
+
+    // save in a proper location
+    
+    
+})
+
+test('retry a flaky button click',async({})=>{
+    const browser=await chromium.launch({headless:false});
+    const page=await browser.newPage();
+    await page.goto('http://127.0.0.1:5500/index.html');
+    const retries=3;
+    let success:boolean=false;
+
+    for(let attempt=0;attempt<retries;attempt++){
+        await page.locator('#flakyButton').click();
+        const result=await page.locator('#status').textContent();
+        if(result?.includes('successfully')){
+            success=true;
+            break;
+        } else {
+            console.log(`Attempt ${attempt + 1} failed`);
+        }
+    }
+    
+    if(!success){
+        console.log("All attempts failed");
+    }
+
+    await new Promise(resolve=>setTimeout(resolve,20000));
+    await browser.close();
+    
+    
+
+    
+});
+
 
 
 
