@@ -1,4 +1,6 @@
 import { test, expect, chromium, Page } from '@playwright/test';
+import { exitCode } from 'process';
+
 
 test.describe('QA Automation Assignment', () => {
     test('Open a webpage and take a screenshot', async ({ page }) => {
@@ -100,15 +102,32 @@ test('Click the 3rd item in a list',async({page})=>{
     await page.locator('#nav li').nth(2).click();
     await page.waitForTimeout(10000);
     await page.close();
+
+})
+
+test('Click a radio button',async({page})=>{
+    await page.goto('https://demoqa.com/radio-button');
+    await page.locator('#impressiveRadio').click();
+    await page.waitForTimeout(10000);
+    await page.close();
+})
+
+test('File upload test',async({page})=>{
+    await page.goto('https://demoqa.com/upload-download');
+    const file_path=('/Users/pramod.p/Documents/playwright_automation_practise/PLAYWRIGHT_AUTOMATION_PRACTISE/file_example_PNG_500kB.png')
+    const file_loc=page.locator('#uploadFile')
+    await file_loc.setInputFiles(file_path);
+    await page.waitForTimeout(10000);
+    
+    // verify the file is uploaded
+    const file_name=await page.locator('#uploadedFilePath').textContent();
+    const proper_name=file_name?.split('//').pop();
+    await expect(proper_name).toBe('file_example_PNG_500kB.png');
+    await page.waitForTimeout(10000);
+    await page.close();
 })
 
 
-
-
-
-
-
+    
 
 }); 
-
-
