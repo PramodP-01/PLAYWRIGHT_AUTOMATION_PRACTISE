@@ -1,5 +1,4 @@
 import { test, expect, chromium, Page } from '@playwright/test';
-import { exitCode } from 'process';
 
 
 test.describe('QA Automation Assignment', () => {
@@ -126,6 +125,54 @@ test('File upload test',async({page})=>{
     await page.waitForTimeout(10000);
     await page.close();
 })
+
+test('Handling js alerts',async({page})=>{
+    await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
+
+    // handle js alert event
+    page.on('dialog',async(dialog)=>{
+        console.log(dialog.message());
+        await dialog.accept();
+    })
+
+    await page.getByText('Click for JS Alert').click();
+    await page.waitForTimeout(10000);
+    
+    const result=await page.locator('#result').textContent();
+    const proper_msg=result?.trim();
+    await expect(proper_msg).toBe('You successfully clicked an alert');
+    await page.waitForTimeout(10000);
+    await page.close();
+})
+
+test('handling iframes',async({page})=>{
+    await page.goto('https://demoqa.com/frames');
+
+    // find frame
+    const frame=page.frameLocator('#frame1');
+
+    if(!frame)
+
+        {
+            console.log('Frame not found');
+            await page.close();
+            return;
+        }
+
+    // text in frame
+
+    const text=await frame.locator('#sampleHeading').textContent();
+    if(text?.trim()==='This is a sample page'){
+        console.log('Text in frame is correct');
+    }
+    else{
+        console.log('Text in frame is incorrect');  
+    }
+    await page.waitForTimeout(10000);
+    await page.close();
+})
+
+
 
 
     
