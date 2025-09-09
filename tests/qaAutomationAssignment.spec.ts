@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, chromium, Page } from '@playwright/test';
 
 test.describe('QA Automation Assignment', () => {
     test('Open a webpage and take a screenshot', async ({ page }) => {
@@ -19,5 +19,23 @@ test.describe('QA Automation Assignment', () => {
 
     });
 
+    test('Click a button and wait for text', async () => {
+    const browser = await chromium.launch({ headless: false });
+    const page: Page = await browser.newPage();
+    await page.goto('https://demoqa.com/alerts');
+
+    // Wait for the dialog event after clicking the button
+    const [dialog] = await Promise.all([
+        page.waitForEvent('dialog'),
+        page.click('#timerAlertButton')
+    ]);
+    console.log(dialog.message());
+    await dialog.accept();
+
+    await browser.close();
+});
+
 
 }); 
+
+
