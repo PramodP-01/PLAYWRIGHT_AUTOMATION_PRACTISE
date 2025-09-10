@@ -1,5 +1,5 @@
 import { test, expect, chromium, Page } from '@playwright/test';
-import { resolve } from 'path';
+
 
 
 test.describe('QA Automation Assignment', () => {
